@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { useCVContext } from "../context/CVContext";
 import { CVColors, TuTiColors } from "../src/constants/theme";
@@ -8,15 +8,18 @@ export default function HomeScreen() {
   const router = useRouter();
   const { cvData } = useCVContext();
 
-  console.log("CV Data cargado:", cvData); // Para debugging
-
   const isPersonalInfoComplete =
-    cvData.personalInfo.fullName && cvData.personalInfo.email;
+    Boolean(cvData.personalInfo.fullName.trim()) &&
+    Boolean(cvData.personalInfo.email.trim());
   const hasExperience = cvData.experiences.length > 0;
   const hasEducation = cvData.education.length > 0;
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.container}
+      keyboardShouldPersistTaps="handled"
+    >
       <Text style={styles.title}>Crea tu CV Profesional</Text>
       <Text style={styles.subtitle}>
         Completa cada sección para preparar tu próximo paso profesional.
@@ -36,7 +39,7 @@ export default function HomeScreen() {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("./personal-info")}
+          onPress={() => router.push("/personal-info")}
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
@@ -55,7 +58,7 @@ export default function HomeScreen() {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("./experience")}
+          onPress={() => router.push("/experience")}
         >
           <Text style={styles.buttonText}>Agregar</Text>
         </TouchableOpacity>
@@ -72,7 +75,7 @@ export default function HomeScreen() {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("./education")}
+          onPress={() => router.push("/education")}
         >
           <Text style={styles.buttonText}>Agregar</Text>
         </TouchableOpacity>
@@ -81,20 +84,24 @@ export default function HomeScreen() {
       <View style={{ marginTop: 30 }}>
         <TouchableOpacity
           style={[styles.button, styles.previewButton]}
-          onPress={() => router.push("./preview")}
+          onPress={() => router.push("/preview")}
         >
           <Text style={[styles.buttonText, styles.previewButtonText]}>
             Ver Vista Previa del CV
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
+    backgroundColor: CVColors.background,
+  },
+  container: {
+    flexGrow: 1,
     padding: 20,
     backgroundColor: CVColors.background,
   },

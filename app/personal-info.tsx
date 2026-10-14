@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ScrollView, Alert} from "react-native";
+import React, {useState} from 'react';
+import {View, StyleSheet, ScrollView} from "react-native";
 import {useRouter} from "expo-router";
 import{InputField} from "../components/InputField";
 import {NavigationButton} from "../components/NavigationButton";
 import {useCVContext} from "../context/CVContext";
 import {PersonalInfo}from "../types/cv.types";
 import { CVColors } from "../src/constants/theme";
+import { showMessage } from "../utils/dialogs";
 
 export default function PersonalInfoScreen(){
     const router= useRouter();
@@ -13,19 +14,23 @@ export default function PersonalInfoScreen(){
 
     const [formData, setFormData]= useState<PersonalInfo>(cvData.personalInfo);
 
-    useEffect(()=>{
-        setFormData(cvData.personalInfo);
-    }, [cvData.personalInfo]);
-
     const handleSave = () =>{
-        if(!formData.fullName || !formData.email){
-            Alert.alert("Error", "Por favor completa al menos el nombre y email");
+        const fullName = formData.fullName.trim();
+        const email = formData.email.trim();
+        if(!fullName || !email){
+            showMessage("Error", "Por favor completa al menos el nombre y email");
             return;
         }
-        updatePersonalInfo(formData);
-        Alert.alert("Exito", "Informacion guardada correctamente", [
-            {text: "OK",onPress:()=> router.back()},
-        ]);
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showMessage("Error", "Por favor ingresa un email válido");
+            return;
+        }
+        updatePersonalInfo({ ...formData, fullName, email });
+        showMessage(
+            "Éxito",
+            "Información guardada correctamente",
+            () => router.back(),
+        );
     };
 
     return(

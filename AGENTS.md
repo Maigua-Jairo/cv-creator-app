@@ -20,7 +20,7 @@
 
 ## Navegación: verificar antes de modificar
 
-El proyecto contiene simultáneamente `app/` y `src/app/`. Expo Router da prioridad a `src/app/` cuando ambas carpetas existen, mientras que las pantallas del creador de CV están en `app/`. Los tipos de rutas se generan según la raíz efectiva del Router.
+El proyecto contiene simultáneamente `app/` y `src/app/`. Expo Router da prioridad a `src/app/` cuando ambas carpetas existen, mientras que las pantallas del creador de CV están en `app/`. `app.json` fija `expo.extra.router.root` en `app` para usar las rutas del CV; conserva esa configuración al editar rutas. Los tipos se generan según la raíz efectiva del Router.
 
 - Antes de añadir o cambiar rutas, confirma qué árbol de rutas está activo y qué pantallas debe abrir la app.
 - No uses conversiones de tipo (`as Href` u otras) para ocultar que una ruta no está registrada.

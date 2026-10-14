@@ -6,7 +6,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Alert,
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -15,6 +14,7 @@ import { NavigationButton } from "../components/NavigationButton";
 import { useCVContext } from "../context/CVContext";
 import { Education } from "../types/cv.types";
 import { CVColors } from "../src/constants/theme";
+import { showConfirmation, showMessage } from "../utils/dialogs";
 
 export default function EducationScreen() {
   const router = useRouter();
@@ -28,14 +28,17 @@ export default function EducationScreen() {
   });
 
   const handleAdd = () => {
-    if (!formData.institution || !formData.degree) {
-      Alert.alert("Error", "Por favor completa al menos institución y título");
+    if (!formData.institution.trim() || !formData.degree.trim()) {
+      showMessage("Error", "Por favor completa al menos institución y título");
       return;
     }
 
     const newEducation: Education = {
       id: Date.now().toString(),
-      ...formData,
+      institution: formData.institution.trim(),
+      degree: formData.degree.trim(),
+      field: formData.field.trim(),
+      graduationYear: formData.graduationYear.trim(),
     };
 
     addEducation(newEducation);
@@ -48,18 +51,15 @@ export default function EducationScreen() {
       graduationYear: "",
     });
 
-    Alert.alert("Éxito", "Educación agregada correctamente");
+    showMessage("Éxito", "Educación agregada correctamente");
   };
 
   const handleDelete = (id: string) => {
-    Alert.alert("Confirmar", "¿Estás seguro de eliminar esta educación?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Eliminar",
-        style: "destructive",
-        onPress: () => deleteEducation(id),
-      },
-    ]);
+    showConfirmation(
+      "Confirmar",
+      "¿Estás seguro de eliminar esta educación?",
+      () => deleteEducation(id),
+    );
   };
 
   return (

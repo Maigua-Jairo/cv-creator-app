@@ -19,20 +19,20 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ cvData }) => {
             {personalInfo.fullName || "Tu Nombre"}
           </Text>
           <View style={styles.contactInfo}>
-            {personalInfo.email && (
+            {personalInfo.email.trim().length > 0 && (
               <Text style={styles.contactText}>📧 {personalInfo.email}</Text>
             )}
-            {personalInfo.phone && (
+            {personalInfo.phone.trim().length > 0 && (
               <Text style={styles.contactText}>📱 {personalInfo.phone}</Text>
             )}
-            {personalInfo.location && (
+            {personalInfo.location.trim().length > 0 && (
               <Text style={styles.contactText}>📍 {personalInfo.location}</Text>
             )}
           </View>
         </View>
 
         {/* Resumen profesional */}
-        {personalInfo.summary && (
+        {personalInfo.summary.trim().length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>RESUMEN PROFESIONAL</Text>
             <Text style={styles.summaryText}>{personalInfo.summary}</Text>
@@ -50,7 +50,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ cvData }) => {
                 <Text style={styles.itemDate}>
                   {exp.startDate} - {exp.endDate || "Actual"}
                 </Text>
-                {exp.description && (
+                {exp.description.trim().length > 0 && (
                   <Text style={styles.itemDescription}>{exp.description}</Text>
                 )}
               </View>
@@ -65,11 +65,11 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ cvData }) => {
             {education.map((edu) => (
               <View key={edu.id} style={styles.item}>
                 <Text style={styles.itemTitle}>{edu.degree}</Text>
-                {edu.field && (
+                {edu.field.trim().length > 0 && (
                   <Text style={styles.itemSubtitle}>{edu.field}</Text>
                 )}
                 <Text style={styles.itemInstitution}>{edu.institution}</Text>
-                {edu.graduationYear && (
+                {edu.graduationYear.trim().length > 0 && (
                   <Text style={styles.itemDate}>{edu.graduationYear}</Text>
                 )}
               </View>

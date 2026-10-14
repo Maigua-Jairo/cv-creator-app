@@ -28,12 +28,17 @@
       [
         "expo-splash-screen",
         {
-        "backgroundColor": "#001fbc",
+          "backgroundColor": "#001fbc",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
       ]
     ],
+    "extra": {
+      "router": {
+        "root": "app"
+      }
+    },
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true

@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Alert,
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -12,8 +11,8 @@ import { InputField } from "../components/InputField";
 import { NavigationButton } from "../components/NavigationButton";
 import { useCVContext } from "../context/CVContext";
 import { Experience } from "../types/cv.types";
-import {useForm, Controller} from 'react-hook-form';
 import { CVColors } from "../src/constants/theme";
+import { showConfirmation, showMessage } from "../utils/dialogs";
 
 export default function ExperienceScreen() {
   const router = useRouter();
@@ -28,8 +27,12 @@ export default function ExperienceScreen() {
   });
 
   const handleAdd = () => {
-    if (!formData.company || !formData.position || !formData.startDate) {
-      Alert.alert(
+    if (
+      !formData.company.trim() ||
+      !formData.position.trim() ||
+      !formData.startDate.trim()
+    ) {
+      showMessage(
         "Error",
         "Por favor completa al menos empresa, cargo y fecha de inicio"
       );
@@ -38,7 +41,11 @@ export default function ExperienceScreen() {
 
     const newExperience: Experience = {
       id: Date.now().toString(),
-      ...formData,
+      company: formData.company.trim(),
+      position: formData.position.trim(),
+      startDate: formData.startDate.trim(),
+      endDate: formData.endDate.trim(),
+      description: formData.description.trim(),
     };
 
     addExperience(newExperience);
@@ -52,37 +59,18 @@ export default function ExperienceScreen() {
       description: "",
     });
 
-    Alert.alert("Éxito", "Experiencia agregada correctamente");
+    showMessage("Éxito", "Experiencia agregada correctamente");
   };
 
   const handleDelete = (id: string) => {
-    Alert.alert("Confirmar", "¿Estás seguro de eliminar esta experiencia?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Eliminar",
-        style: "destructive",
-        onPress: () => deleteExperience(id),
-      },
-    ]);
+    showConfirmation(
+      "Confirmar",
+      "¿Estás seguro de eliminar esta experiencia?",
+      () => deleteExperience(id),
+    );
   };
 
 
-  const { 
-    control, 
-    handleSubmit, 
-    formState: { errors } 
-  } = useForm({
-    defaultValues: {
-      company: '',
-      startDate: new Date(),
-    }
-  });
-
-  const onSubmit = (data: any) => {
-    console.log("Datos listos:", data);
-    addExperience(data); // Guardamos en tu contexto global
-  };
-  
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
